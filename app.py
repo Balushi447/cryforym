@@ -1,8 +1,10 @@
 from flask import Flask, jsonify, request
+from flask_cors import CORS  # Import CORS
 import requests
 import pandas as pd
 
 app = Flask(__name__)
+CORS(app)  # Enable CORS for all routes
 
 # CoinGecko API endpoint
 COINGECKO_URL = "https://api.coingecko.com/api/v3"
