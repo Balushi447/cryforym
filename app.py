@@ -2,6 +2,7 @@ from flask import Flask, jsonify, request
 from flask_cors import CORS  # Import CORS
 import requests
 import pandas as pd
+from datetime import datetime  # Import datetime for sorting
 
 app = Flask(__name__)
 CORS(app)  # Enable CORS for all routes
@@ -126,7 +127,10 @@ def get_crypto_news(coin_id):
     try:
         response = requests.get(CRYPTOPANIC_URL, params=params)
         if response.status_code == 200:
-            return response.json().get('results', [])
+            news_data = response.json().get('results', [])
+            # Sort news by published_at in descending order (most recent first)
+            news_data.sort(key=lambda x: datetime.strptime(x['published_at'], "%Y-%m-%dT%H:%M:%SZ"), reverse=True)
+            return news_data
         else:
             print(f"CryptoPanic API Error: {response.status_code} - {response.text}")
             return None
