@@ -120,12 +120,18 @@ def get_crypto_news(coin_id):
     params = {
         "auth_token": CRYPTOPANIC_API_KEY,
         "currencies": coin_id.upper(),  # CryptoPanic uses uppercase symbols (e.g., DOGE, XRP)
-        "public": "true"
+        "public": "true",
+        "sort": "published_desc"  # Sort by most recent news
     }
-    response = requests.get(CRYPTOPANIC_URL, params=params)
-    if response.status_code == 200:
-        return response.json().get('results', [])
-    else:
+    try:
+        response = requests.get(CRYPTOPANIC_URL, params=params)
+        if response.status_code == 200:
+            return response.json().get('results', [])
+        else:
+            print(f"CryptoPanic API Error: {response.status_code} - {response.text}")
+            return None
+    except Exception as e:
+        print(f"Error fetching news: {e}")
         return None
 
 # New endpoint for cryptocurrency news
