@@ -128,15 +128,19 @@ def get_crypto_news(coin_id):
         response = requests.get(CRYPTOPANIC_URL, params=params)
         if response.status_code == 200:
             news_data = response.json().get('results', [])
-            # Sort news by published_at in descending order (most recent first)
+            if not news_data:
+                print("No news data found.")
+                return []
+
+            # Sort news by 'published_at' field in descending order (most recent first)
             news_data.sort(key=lambda x: datetime.strptime(x['published_at'], "%Y-%m-%dT%H:%M:%SZ"), reverse=True)
             return news_data
         else:
             print(f"CryptoPanic API Error: {response.status_code} - {response.text}")
-            return None
+            return []
     except Exception as e:
         print(f"Error fetching news: {e}")
-        return None
+        return []
 
 # New endpoint for cryptocurrency news
 @app.route('/api/news', methods=['GET'])
