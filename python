@@ -63,25 +63,3 @@ def get_data():
 
 if __name__ == '__main__':
     app.run(debug=True)
-def get_news(coin_id):
-    """Fetch news related to a cryptocurrency."""
-    url = "https://cryptopanic.com/api/v1/posts/"
-    params = {
-        "auth_token": "YOUR_CRYPTOPANIC_API_KEY",  # Replace with your API key
-        "currencies": coin_id.upper(),
-        "public": "true"
-    }
-    response = requests.get(url, params=params)
-    if response.status_code == 200:
-        return response.json().get('results', [])
-    else:
-        return None
-
-@app.route('/api/news', methods=['GET'])
-def get_news_data():
-    coin_id = request.args.get('coin', 'DOGE')  # Default to Dogecoin
-    news = get_news(coin_id)
-    if not news:
-        return jsonify({"error": "Failed to fetch news"}), 500
-
-    return jsonify(news)
