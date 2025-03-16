@@ -11,7 +11,7 @@ COINGECKO_URL = "https://api.coingecko.com/api/v3"
 
 # CryptoPanic API endpoint and key
 CRYPTOPANIC_URL = "https://cryptopanic.com/api/v1/posts/"
-CRYPTOPANIC_API_KEY = "YOUR_CRYPTOPANIC_API_KEY"  # Replace with your API key
+CRYPTOPANIC_API_KEY = "cffd0fa0e220922f7f4176c2962b173ea70b2d89"  # Replace with your API key
 
 def get_historical_data(coin_id, days=30):
     """Fetch historical price data for a cryptocurrency."""
