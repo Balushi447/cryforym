@@ -1,5 +1,6 @@
-import requests
-import pandas as pd
+Flask==2.3.2
+requests==2.31.0
+numpy==1.23.5
 
 app = Flask(__name__)
 
