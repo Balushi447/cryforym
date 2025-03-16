@@ -9,6 +9,10 @@ CORS(app)  # Enable CORS for all routes
 # CoinGecko API endpoint
 COINGECKO_URL = "https://api.coingecko.com/api/v3"
 
+# CryptoPanic API endpoint and key
+CRYPTOPANIC_URL = "https://cryptopanic.com/api/v1/posts/"
+CRYPTOPANIC_API_KEY = "YOUR_CRYPTOPANIC_API_KEY"  # Replace with your API key
+
 def get_historical_data(coin_id, days=30):
     """Fetch historical price data for a cryptocurrency."""
     url = f"{COINGECKO_URL}/coins/{coin_id}/market_chart"
@@ -108,6 +112,41 @@ def get_future_insights():
 
     return jsonify({
         "insights": insights
+    })
+
+# New function to fetch cryptocurrency news
+def get_crypto_news(coin_id):
+    """Fetch cryptocurrency news from CryptoPanic."""
+    params = {
+        "auth_token": CRYPTOPANIC_API_KEY,
+        "currencies": coin_id.upper(),  # CryptoPanic uses uppercase symbols (e.g., DOGE, XRP)
+        "public": "true"
+    }
+    response = requests.get(CRYPTOPANIC_URL, params=params)
+    if response.status_code == 200:
+        return response.json().get('results', [])
+    else:
+        return None
+
+# New endpoint for cryptocurrency news
+@app.route('/api/news', methods=['GET'])
+def get_news():
+    coin_id = request.args.get('coin', 'DOGE')  # Default to Dogecoin
+    news = get_crypto_news(coin_id)
+    if not news:
+        return jsonify({"error": "Failed to fetch news"}), 500
+
+    # Format news data
+    formatted_news = []
+    for item in news:
+        formatted_news.append({
+            "title": item.get('title'),
+            "url": item.get('url'),
+            "published_at": item.get('published_at')
+        })
+
+    return jsonify({
+        "news": formatted_news
     })
 
 if __name__ == '__main__':
